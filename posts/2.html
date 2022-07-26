@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>mybatis的学习 | 茶子枫のBlog</title><meta name="keywords" content="博客"><meta name="author" content="茶子枫"><meta name="copyright" content="茶子枫"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="- 使用软编码的好处硬编码: 将数据直接写入代码进行编译开发,若发生需要更改的问题,就需要更改源代码软编码: 将数据与源代码解耦(分开处理), mybatis将sql于底层代码分离, 后期维护修改更为方便 - mybatis入门使用流程：    - 定义pojo类(xxxx.pojo.类名)    - 加载核心配置文件,获取SqlSessionFactory对象    - 获取SqlSession">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis的学习">
+<meta property="og:url" content="https://maplesukid.top/posts/2.html">
+<meta property="og:site_name" content="茶子枫のBlog">
+<meta property="og:description" content="- 使用软编码的好处硬编码: 将数据直接写入代码进行编译开发,若发生需要更改的问题,就需要更改源代码软编码: 将数据与源代码解耦(分开处理), mybatis将sql于底层代码分离, 后期维护修改更为方便 - mybatis入门使用流程：    - 定义pojo类(xxxx.pojo.类名)    - 加载核心配置文件,获取SqlSessionFactory对象    - 获取SqlSession">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png">
+<meta property="article:published_time" content="2022-07-19T16:01:33.339Z">
+<meta property="article:modified_time" content="2022-07-26T05:36:56.401Z">
+<meta property="article:author" content="茶子枫">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://maplesukid.top/posts/2"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mybatis的学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-26 13:36:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/ziti.css"> <script src="https://cdn.jsdelivr.net/gh/TaylorLottner/Fork/sakura.js"></script><script src="/js/sakura.js"></script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/headphoto.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友站</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">茶子枫のBlog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友站</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">mybatis的学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-19T16:01:33.339Z" title="发表于 2022-07-20 00:01:33">2022-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-07-26T05:36:56.401Z" title="更新于 2022-07-26 13:36:56">2022-07-26</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="mybatis的学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/2.html#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="使用软编码的好处"><a href="#使用软编码的好处" class="headerlink" title="- 使用软编码的好处"></a>- 使用软编码的好处</h2><p><strong>硬编码:</strong> 将数据直接写入代码进行编译开发,若发生需要更改的问题,就需要更改源代码<br><strong>软编码:</strong> 将数据与源代码解耦(分开处理), mybatis将sql于底层代码分离, 后期维护修改更为方便</p>
+<h2 id="mybatis入门使用"><a href="#mybatis入门使用" class="headerlink" title="- mybatis入门使用"></a>- mybatis入门使用</h2><p><strong>流程：</strong><br>    - 定义pojo类(xxxx.pojo.类名)<br>    - 加载核心配置文件,获取SqlSessionFactory对象<br>    - 获取SqlSession对象,执行sql语句<br>    - 释放资源</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. 加载mybatis核心配置文件,获取SqlSessionFactory</span></span><br><span class="line">String resource =<span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">InputStream inputStream = <span class="module-access"><span class="module"><span class="identifier">Resources</span>.</span></span>get<span class="constructor">ResourceAsStream(<span class="params">resource</span>)</span>;</span><br><span class="line">SqlSessionFactory sqlSessionFactory =<span class="keyword">new</span> <span class="constructor">SqlSessionFactoryBuilder()</span>.build(inputStream);</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. 获取SqlSession对象,用它来执行sql</span></span><br><span class="line">SqlSession sqlSession =sqlSessionFactory.<span class="keyword">open</span><span class="constructor">Session()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//3. 执行sql</span></span><br><span class="line">List&lt;students&gt; students =sqlSession.select<span class="constructor">List(<span class="string">&quot;test.selectAll&quot;</span>)</span>;<span class="comment">//内容为名称空间.id,来源自对应编写的Mapper.xml文件</span></span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(students);</span><br><span class="line"></span><br><span class="line"><span class="comment">//4. 释放资源</span></span><br><span class="line">sqlSession.close<span class="literal">()</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mapper代理"><a href="#Mapper代理" class="headerlink" title="- Mapper代理"></a>- Mapper代理</h2><p><strong>目的:</strong> 解决原生方式中的硬编码(入门代码第3步); 简化后期执行sql<br><strong>步骤:</strong> </p>
+<ol>
+<li>定义与sql映射文件同名的Mapper接口,并将Mapper接口与sql映射文件置于同一目录下</li>
+<li>设置sql映射文件的namespace属性为Mapper接口全限定名</li>
+<li>在Mapper接口中定义方法,方法名就是sql映射文件中sql语句的id,并保持参数类型和返回值类型一致</li>
+<li>编码：通过SqlSession的getMapper方法获取Mapper接口的代理对象; 调用对应方法完成sql的执行</li>
+</ol>
+<p><strong>包扫描:</strong>  若Mapper接口名称与SQL映射文件名称相同,且在同一目录下,可使用包扫描的方式简化sql映射文件加载,即同一个包的文件只需要于mybatis-config.xml中输入以下代码,就无需在一条条加载映射文件:<code> &lt;package name=&quot;包路径&quot;/&gt;</code></p>
+<p>eg:用Mapper代理实现查询全部数据操作</p>
+<ol>
+<li>mapper接口书写:<code>List&lt;students&gt; selectAll();</code></li>
+<li>xml处书写:<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper <span class="keyword">namespace</span>=<span class="string">&quot;myTest.mapper.testDemoMapper&quot;</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">select</span> id=<span class="string">&quot;selectAll&quot;</span> resultType=<span class="string">&quot;myTest.pojo.students&quot;</span>&gt;</span><br><span class="line">    <span class="keyword">select</span> * <span class="keyword">from</span> studentsinformation;</span><br><span class="line">    &lt;/<span class="keyword">select</span>&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br><span class="line">```  </span><br><span class="line"><span class="number">3.</span> 测试用例处书写:</span><br></pre></td></tr></table></figure>
+&#x2F;&#x2F;1. 加载mybatis核心配置文件，获取SqlSessionFactory<br>String resource &#x3D;”mybatis-config.xml”;<br>inputStream inputStream &#x3D; Resources.getResourceAsStream(resource);<br>SqlSessionFactory sqlSessionFactory &#x3D;new SqlSessionFactoryBuilder().build(inputStream);</li>
+</ol>
+<p>&#x2F;&#x2F;2. 获取SqlSession对象，用它来执行sql<br>SqlSession sqlSession &#x3D;sqlSessionFactory.openSession();</p>
+<p>&#x2F;&#x2F;3. 获取Mapper接口的代理对象并执行<br>testDemoMapper testDemoMapper &#x3D;sqlSession.getMapper(testDemoMapper.class);</p>
+<p>&#x2F;&#x2F;4.执行方法<br>List<students> students &#x3D;testDemoMapper.selectAll();<br>System.out.println(students);</p>
+<p>&#x2F;&#x2F;5. 释放资源<br>sqlSession.close();</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">## - mybatis的参数占位符</span></span><br><span class="line"><span class="bullet">-</span> #&#123;&#125; :会将此处替换为? 防止sql注入</span><br><span class="line"><span class="bullet">-</span> $&#123;&#125; :拼接sql语句 会存在sql注入问题</span><br><span class="line"><span class="bullet">-</span> 使用时机: 参数传递的时候使用#&#123;&#125;; 表名或列名不固定时使用$&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">## - 使用mybatis进行增删改查</span></span><br><span class="line"><span class="section">### 查询</span></span><br><span class="line"><span class="strong">**注:**</span> 使用模糊查询时需在测试类中进行数据处理，如:  <span class="code">`` name=&quot;%&quot;+name+&quot;%&quot;;`</span>`</span><br><span class="line"><span class="bullet">-</span> <span class="strong">**多条件查询:**</span> </span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于mapper接口的参数接收:**</span> </span><br><span class="line"><span class="bullet">    1.</span>  散装参数：如果方法中存在多个参数,需要使用@Param(&quot;sql参数占位符名称)置于数据类型前</span><br><span class="line"><span class="bullet">    2.</span>  实体类封装参数: 需要保证sql中的参数名和实体类属性名对应</span><br><span class="line"><span class="bullet">    3.</span>  map集合: 需要保证sql中的参数和map集合的键名对应</span><br><span class="line"></span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于xml文件中sql语句的书写:**</span></span><br><span class="line"><span class="code">    eg: </span></span><br></pre></td></tr></table></figure>
+<pre><code>&lt;select id=&quot;selectAll&quot; resultType=&quot;myTest.pojo.students&quot;&gt;
+    select * from studentsinformation where nums = #&#123;nums&#125; and name like #&#123;name&#125; 
+&lt;/select&gt;
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">  -</span> <span class="strong">**存在问题:**</span> 当用户输入的参数个数与sql语句参数个数不一致时会导致查询失败</span><br><span class="line"><span class="bullet">-</span> <span class="strong">**多条件动态查询:**</span></span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**目的:**</span> 为了解决普通多条件查询中用户输入参数个数与sql语句参数个数不一致造成的查询失败</span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于xml文件中sql语句的书写:**</span> \<span class="language-xml"><span class="tag">&lt;<span class="name">if</span>&gt;</span></span>，用于判断参数是否有值,使用test属性进行条件判断,使用时配合\<span class="language-xml"><span class="tag">&lt;<span class="name">where</span>&gt;</span></span>标签替换where关键词</span><br><span class="line"><span class="code">    eg: </span></span><br></pre></td></tr></table></figure>
+&lt;select id=&quot;selectByCondition&quot; resultType=&quot;myTest.pojo.students&quot;&gt;
+  select * from studentsinformation
+    &lt;where&gt;
+        &lt;if test=&quot;statement !=null&quot;&gt;
+            and statement =#&#123;statement&#125;
+        &lt;/if&gt;
+        &lt;if test=&quot;nums !=null&quot;&gt;
+            and nums =#&#123;nums&#125;
+        &lt;/if&gt;
+        &lt;if test=&quot;name != null and name !=&#39;&#39; &quot;&gt;
+            and name =#&#123;name&#125;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- **单条件动态查询**</span><br><span class="line">  - **目的:** 当用户从多个条件中选择一个时，根据该条件输出对应内容</span><br><span class="line">  - **于xml文件中的书写:** \<span class="variable">&lt;choose&gt;</span>(\<span class="variable">&lt;when&gt;</span>,\<span class="variable">&lt;otherwise&gt;</span>)选择,\<span class="variable">&lt;choose&gt;</span>类似于java的switch,\<span class="variable">&lt;when&gt;</span>类似case,\<span class="variable">&lt;otherwise&gt;</span>类似<span class="keyword">default</span>,一般用\<span class="variable">&lt;where&gt;</span>标签包裹语句而不单独写\<span class="variable">&lt;default&gt;</span></span><br><span class="line">    eg:</span><br></pre></td></tr></table></figure>
+&lt;select id=&quot;selectByConditionSinger&quot; resultType=&quot;myTest.pojo.students&quot;&gt;
+    select * from studentsinformation
+    &lt;where&gt;
+        &lt;choose&gt;
+            &lt;when test=&quot;nums !=null&quot;&gt;
+                nums =#&#123;nums&#125;
+            &lt;/when&gt;
+            &lt;when test=&quot;name !=null and name!=&#39;&#39; &quot;&gt;
+                name =#&#123;name&#125;
+            &lt;/when&gt;
+            &lt;when test=&quot;statement !=null&quot;&gt;
+                statement =#&#123;statement&#125;
+            &lt;/when&gt;
+        &lt;/choose&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">### 添加</span></span><br><span class="line"><span class="bullet">-</span> <span class="strong">**于mapper接口:**</span> void返回,参数值为实体类对象,添加成功与否于测试类中用异常判断,语句写完后需执行sqlSession.commit()提交,因为mybatis默认关闭了事务自动提交,需手动提交,否则会回滚事务,且主键自增1</span><br><span class="line"><span class="bullet">-</span> <span class="strong">**于xml文件中的书写:**</span> 无需填写主键,主键由系统自增长生成</span><br><span class="line"><span class="code">    eg:</span></span><br></pre></td></tr></table></figure>
+&lt;insert id=&quot;add&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;nums&quot;&gt;  &lt;!-- useGeneratedKeys=&quot;true&quot; keyProperty=&quot;nums&quot;决定了主键的值能够返回,一定要填写,由mybatisX生成的语句不自带该参数 --&gt;
+    insert into studentsinformation(name, sex, birth, score, email, phone, statement)
+    values(#&#123;name&#125;,#&#123;sex&#125;,#&#123;birth&#125;,#&#123;score&#125;,#&#123;email&#125;,#&#123;phone&#125;,#&#123;statement&#125;);
+&lt;/insert&gt;
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">### 修改</span></span><br><span class="line"><span class="bullet">-</span> <span class="strong">**修改全部字段**</span></span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于mapper接口:**</span> void返回,参数值为实体类对象,修改成功与否于测试类中用异常判断,语句写完后需执行sqlSession.commit()提交,因为mybatis默认关闭了事务自动提交,需手动提交,否则会回滚事务</span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于xml文件中的书写:**</span> 根据主键id,来修改对应内容</span><br><span class="line"><span class="code">    eg:</span></span><br></pre></td></tr></table></figure>
+&lt;update id=&quot;update&quot;&gt;
+    update studentsinformation
+    set name=#&#123;name&#125;,
+    sex=#&#123;sex&#125;,
+    birth=#&#123;birth&#125;,
+    score=#&#123;score&#125;,
+    email=#&#123;email&#125;,
+    phone=#&#123;phone&#125;,
+    statement=#&#123;statement&#125;
+    where nums=#&#123;nums&#125;;
+&lt;/update&gt;
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">  -</span> <span class="strong">**存在问题:**</span> 当用户输入的参数个数与sql语句参数个数不一致时会导致没设置参数的值变成null,因此需要使用动态方法</span><br><span class="line"><span class="bullet">-</span> <span class="strong">**修改动态字段(不固定参数个数)**</span></span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于xml文件中的书写:**</span> \<span class="language-xml"><span class="tag">&lt;<span class="name">if</span>&gt;</span></span>，用于判断参数是否有值,使用test属性进行条件判断,使用时配合\<span class="language-xml"><span class="tag">&lt;<span class="name">set</span>&gt;</span></span>标签替换set,防止报错</span><br><span class="line"><span class="code">    eg：</span></span><br></pre></td></tr></table></figure>
+    &lt;update id=&quot;update&quot;&gt;
+    update studentsinformation
+    &lt;set&gt;
+    &lt;if test=&quot;name!=null and name!=&#39;&#39; &quot;&gt;
+    name=#&#123;name&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;sex!=null and sex!=&#39;&#39; &quot;&gt;
+    sex=#&#123;sex&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;birth!=null and birth!=&#39;&#39; &quot;&gt;
+    birth=#&#123;birth&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;score!=null&quot;&gt;
+    score=#&#123;score&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;email!=null and email!=&#39;&#39; &quot;&gt;
+    email=#&#123;email&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;phone!=null and phone!=&#39;&#39; &quot;&gt;
+    phone=#&#123;phone&#125;,
+    &lt;/if&gt;
+    &lt;if test=&quot;statement!=null&quot;&gt;
+    statement=#&#123;statement&#125;
+    &lt;/if&gt;
+    &lt;/set&gt;
+    where nums=#&#123;nums&#125;;
+&lt;/update&gt;
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">### 删除</span></span><br><span class="line"><span class="bullet">-</span> <span class="strong">**删除一个**</span></span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于mapper接口:**</span> void返回,参数值为用户id,修改成功与否于测试类中用异常判断,语句写完后需执行sqlSession.commit()提交,因为mybatis默认关闭了事务自动提交,需手动提交,否则会回滚事务</span><br><span class="line"><span class="bullet">  -</span> <span class="strong">**于xml文件中书写:**</span> </span><br><span class="line"><span class="code">    eg: </span></span><br></pre></td></tr></table></figure>
+&lt;delete id=&quot;deleteById&quot;&gt;
+    delete from studentsinformation where nums =#&#123;nums&#125;;
+&lt;/delete&gt;
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- **批量删除(删除多个)**</span><br><span class="line">  - **于mapper接口:** <span class="literal">void</span>返回，参数值为数组，并使用@Param注解,注解名与数组名相同(mybatis会把数组参数封装成一个<span class="built_in">Map</span>集合，默认用array替换数组,因此需要用@Param注解改变<span class="built_in">Map</span>集合的默认key名称)</span><br><span class="line">  - **于xml文件中书写:** 使用<span class="string">\&lt;foreach&gt;标签,与</span> <span class="keyword">in</span>() 关键字来完成数组遍历,其中<span class="string">\&lt;foreach&gt;的参数含义:</span> collection表示数组名,item表示数组每个元素含义, separator表示连接符</span><br><span class="line">    eg:</span><br></pre></td></tr></table></figure>
+&lt;delete id=&quot;deleteByIds&quot;&gt;
+    delete from studentsinformation where nums in (
+    &lt;foreach collection=&quot;numss&quot; item=&quot;nums&quot; separator=&quot;,&quot;&gt;
+        #&#123;nums&#125;
+    &lt;/foreach&gt;
+    );
+&lt;/delete&gt;
+``` 
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://maplesukid.top">茶子枫</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://maplesukid.top/posts/2.html">https://maplesukid.top/posts/2.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://maplesukid.top" target="_blank">茶子枫のBlog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/1.html"><img class="next-cover" src="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png" onerror="onerror=null;src='https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JDBC的学习</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/headphoto.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">茶子枫</div><div class="author-info__description">欢迎来到茶子枫的Blog</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/MaplesukiD"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">新建立的博客，还有好多东西没做:(</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%BD%AF%E7%BC%96%E7%A0%81%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-number">1.</span> <span class="toc-text">- 使用软编码的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mybatis%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">- mybatis入门使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mapper%E4%BB%A3%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">- Mapper代理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2.html" title="mybatis的学习"><img src="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png" onerror="this.onerror=null;this.src='https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png'" alt="mybatis的学习"/></a><div class="content"><a class="title" href="/posts/2.html" title="mybatis的学习">mybatis的学习</a><time datetime="2022-07-19T16:01:33.339Z" title="发表于 2022-07-20 00:01:33">2022-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1.html" title="JDBC的学习"><img src="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png" onerror="this.onerror=null;this.src='https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png'" alt="JDBC的学习"/></a><div class="content"><a class="title" href="/posts/1.html" title="JDBC的学习">JDBC的学习</a><time datetime="2022-07-15T09:21:54.301Z" title="发表于 2022-07-15 17:21:54">2022-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/0.html" title="mysql的sql语法学习"><img src="/img/Cover1.png" onerror="this.onerror=null;this.src='https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png'" alt="mysql的sql语法学习"/></a><div class="content"><a class="title" href="/posts/0.html" title="mysql的sql语法学习">mysql的sql语法学习</a><time datetime="2022-07-15T05:23:44.882Z" title="发表于 2022-07-15 13:23:44">2022-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4a17b156.html" title="Hello World"><img src="https://img-blog.csdnimg.cn/c49d82aa1b044c0a9a89b2a24191a0b2.png" onerror="this.onerror=null;this.src='https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png'" alt="Hello World"/></a><div class="content"><a class="title" href="/posts/4a17b156.html" title="Hello World">Hello World</a><time datetime="2022-07-12T06:01:20.315Z" title="发表于 2022-07-12 14:01:20">2022-07-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By 茶子枫</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">一起跃入人海，做一朵奔涌的浪花。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '6aa2d236082febe13235',
+      clientSecret: '319eea40f6cf999a33ea7abc39b16351670323b0',
+      repo: 'websiteComment',
+      owner: 'MaplesukiD',
+      admin: ['MaplesukiD'],
+      id: '6c88d6b6cd00a6859b54be0f08e8d2b4',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/js/mouse_snow.min.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><div class="aplayer no-destroy" data-id="7535422477" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1" data-theme="#66ccff"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300,"hOffset":10,"vOffset":-60},"mobile":{"show":false},"react":{"opacity":0.9},"log":false});</script></body></html>
